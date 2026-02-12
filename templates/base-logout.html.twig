@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}TaskLinker
+			{% endblock %}
+		</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+	</head>
+
+	<body>
+		<a href="{{ path('app_home') }}" id="logo">
+			<img src="{{ asset('img/logo.png') }}" alt="Logo TaskLinker"/>
+		</a>
+
+		<div class="auth-page"> {% block body %}{% endblock %}
+			</div>
+
+		</body>
+	</html>
