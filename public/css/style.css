@@ -609,12 +609,17 @@ form .select2-container--default .select2-selection--multiple .select2-selection
 /* ===== AUTH FORM (Register/Login) ===== */
 
 .auth-form{
-    height: 859px;
+    height: 820px;
     width: 710px;
 }
 
+.auth-center {
+    margin-top: 0px;
+}
+
 .auth-form-content{
-  margin-top: 40px;
+    max-width: 310px;
+    margin: 40px auto 0 auto;
 }
 
 .auth-form .form-row,
@@ -624,7 +629,8 @@ form .select2-container--default .select2-selection--multiple .select2-selection
 
 .auth-form label{
   display: block;
-  font-size: 12px;
+  font-size: 16px;
+  color: white;
   margin-bottom: 8px;
   opacity: 0.9;
 }
@@ -641,7 +647,7 @@ form .select2-container--default .select2-selection--multiple .select2-selection
 
 .auth-submit{
   width: 100%;
-  height: 52px;
+  height: 74px;
   margin-top: 26px;
   border: none;
   border-radius: 8px;
@@ -654,7 +660,7 @@ form .select2-container--default .select2-selection--multiple .select2-selection
 .auth-bottom{
   text-align: center;
   margin-top: 18px;
-  font-size: 12px;
+  font-size: 14px;
   opacity: 0.85;
 }
 
