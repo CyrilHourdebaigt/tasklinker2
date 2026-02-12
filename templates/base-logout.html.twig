@@ -10,13 +10,13 @@
 		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 	</head>
 
-	<body>
+	<body class="auth-layout">
 		<a href="{{ path('app_home') }}" id="logo">
 			<img src="{{ asset('img/logo.png') }}" alt="Logo TaskLinker"/>
 		</a>
 
-		<div class="auth-page"> {% block body %}{% endblock %}
-			</div>
-
-		</body>
-	</html>
+        <div class="auth-page">
+		{% block body %}{% endblock %}
+         </div>
+	</body>
+</html>
