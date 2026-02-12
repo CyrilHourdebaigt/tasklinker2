@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\EmployeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +12,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
-class Employe
+// Validation Symfony : empêche deux comptes avec le même email
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé.')]
+class Employe implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,7 +27,8 @@ class Employe
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    // unique: true crée une contrainte UNIQUE en BDD
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -30,6 +36,14 @@ class Employe
 
     #[ORM\Column(length: 50)]
     private ?string $statut = null;
+
+    // Tableau des rôles stocké en BDD
+    #[ORM\Column]
+    private array $roles = [];
+
+    // Contient le mot de passe Hashé
+    #[ORM\Column]
+    private ?string $password = null;
 
     /**
      * @var Collection<int, Projet>
@@ -162,12 +176,54 @@ class Employe
     public function removeTache(Tache $tache): static
     {
         if ($this->taches->removeElement($tache)) {
-            // set the owning side to null (unless already changed)
             if ($tache->getEmploye() === $this) {
                 $tache->setEmploye(null);
             }
         }
 
         return $this;
+    }
+
+    // Retourne l'identifiant unique de l'utilisateur, ici le mail
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    // Retourne les rôles de l'utilisateur
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // On garantit toujours un rôle de base
+        $roles[] = 'ROLE_USER';
+
+        // On supprime les doublons
+        return array_unique($roles);
+    }
+
+    // Définit les rôles de l'utilisateur
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    // Retourne le mot de passe hashé
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    // Définit le mot de passe
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    // On évite de garder en mémoire le mot de passe
+    public function eraseCredentials(): void
+    {
+        // Rien à effacer pour l’instant
     }
 }
