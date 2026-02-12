@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ tache.titre }}
+	- TaskLinker
+{% endblock %}
+
+{% block body %}
+	<header>
+		<div id="current-user"></div>
+		<div id="title-page">
+			<h1>Gestion des droits d'accès</h1>
+		</div>
+	</header>
+
+	<div id="content">
+		{% include 'tache/_form.html.twig' with {
+            form: form,
+            button_label: 'Modifier',
+            show_delete: true,
+            tache: tache
+        } %}
+	</div>
+{% endblock %}
