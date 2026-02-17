@@ -609,7 +609,7 @@ form .select2-container--default .select2-selection--multiple .select2-selection
 /* ===== AUTH FORM (Register/Login) ===== */
 
 .auth-form{
-    height: 820px;
+    height: 800px;
     width: 710px;
 }
 
@@ -663,6 +663,33 @@ form .select2-container--default .select2-selection--multiple .select2-selection
   font-size: 14px;
   opacity: 0.85;
 }
+
+.auth-bottom a {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.log-form {
+  max-width: 710px;
+  height: 690px;
+  padding: 50px 60px;
+}
+
+.log-auth-form-content {
+  margin-top: 50px;
+}
+
+.log-auth-form-content label {
+    color: white;
+}
+
+.auth-title-login {
+    margin-top: 80px;
+    margin-bottom: 34px;
+    font-size: 34px;
+    font-weight: 700;
+}
+
 
 @media (max-width: 992px) {
     nav {

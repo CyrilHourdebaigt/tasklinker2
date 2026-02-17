@@ -1,0 +1,33 @@
+{% extends 'base-logout.html.twig' %}
+
+{% block title %}Se connecter
+{% endblock %}
+
+{% block body %}
+	<div class="auth-card log-form">
+		<h1 class="auth-title-login auth-center">Se connecter</h1>
+
+		<form method="post" class="auth-form-content log-auth-form-content">
+			{% if error %}
+				<div class="auth-alert">
+					{{ error.messageKey|trans(error.messageData, 'security') }}
+				</div>
+			{% endif %}
+
+			<label for="username">E-mail</label>
+			<input type="email" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+
+			<label for="password">Mot de passe</label>
+			<input type="password" name="_password" id="password" autocomplete="current-password" required>
+
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+			<button class="auth-submit" type="submit">Continuer</button>
+
+			<p class="auth-bottom">
+				Vous n’avez pas de compte ?
+				<a href="{{ path('app_register') }}">S’inscrire</a>
+			</p>
+		</form>
+	</div>
+{% endblock %}

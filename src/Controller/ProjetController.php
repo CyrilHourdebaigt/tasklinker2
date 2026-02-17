@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjetController extends AbstractController
 {
@@ -44,6 +45,7 @@ final class ProjetController extends AbstractController
 
     // Je modifie un projet existant
     #[Route('/{id}/edit', name: 'projet_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Projet $projet, Request $request, EntityManagerInterface $em): Response
     {
         // Je crée le formulaire lié au projet sélectionné
@@ -72,6 +74,7 @@ final class ProjetController extends AbstractController
 
     // Création d'un nouveau projet
     #[Route('/projets/nouveau', name: 'projet_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         // Je crée un nouveau projet vide
@@ -100,6 +103,7 @@ final class ProjetController extends AbstractController
 
     // Archivage d'un projet
     #[Route('/projets/{id}/archive', name: 'projet_archive', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function archive(Projet $projet, Request $request, EntityManagerInterface $em): Response
     {
         // Je vérifie le token CSRF pour sécuriser l’action
