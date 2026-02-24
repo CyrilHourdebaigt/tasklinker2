@@ -5,7 +5,10 @@
 	{{ employe.nom }}
 	- TaskLinker
 {% endblock %}
-{% block page_title %}{{ employe.prenom }} {{ employe.nom }}{% endblock %}
+{% block page_title %}
+	{{ employe.prenom }}
+	{{ employe.nom }}
+{% endblock %}
 
 {% block body %}
 
@@ -19,8 +22,8 @@
 		<div class="form-flex">
 			{{ form_row(form.dateEntree) }}
 			{{ form_row(form.statut) }}
-			{{ form_row(form.role) }}
 		</div>
+		{{ form_row(form.role) }}
 
 		<button class="button button-submit">Enregistrer</button>
 

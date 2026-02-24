@@ -14,14 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TacheController extends AbstractController
 {
     // Création d'une nouvelle pour un projet
-    #[Route(
-        '/projets/{id}/taches/nouvelle',
-        name: 'tache_new',
-        requirements: ['id' => '\d+'],
-        methods: ['GET', 'POST']
-    )]
+    #[Route('/projets/{id}/taches/nouvelle', name: 'tache_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function new(Projet $projet, Request $request, EntityManagerInterface $em): Response
     {
+        // J'applique le voter
+        $this->denyAccessUnlessGranted('projet.view', $projet);
+
         // Je crée une nouvelle tâche vide
         $tache = new Tache();
         // Je rattache cette tâche au projet que j’ai reçu dans l’URL
@@ -48,13 +46,10 @@ final class TacheController extends AbstractController
     }
 
     // Modification d’une tâche existante
-    #[Route(
-        '/taches/{id}/edit',
-        name: 'tache_edit',
-        methods: ['GET', 'POST']
-    )]
+    #[Route('/taches/{id}/edit', name: 'tache_edit', methods: ['GET', 'POST'])]
     public function edit(Tache $tache, Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('projet.view', $tache->getProjet());
 
         // Je crée le formulaire lié à la tâche existante
         $form = $this->createForm(TacheType::class, $tache);
@@ -68,7 +63,7 @@ final class TacheController extends AbstractController
                 'id' => $tache->getProjet()->getId(),
             ]);
         }
-        
+
 
         return $this->render('tache/edit.html.twig', [
             'form' => $form->createView(),
@@ -80,6 +75,8 @@ final class TacheController extends AbstractController
     #[Route('/taches/{id}/delete', name: 'tache_delete', methods: ['POST'])]
     public function delete(Tache $tache, Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('projet.view', $tache->getProjet());
+
         // Je vérifie que le token CSRF reçu correspond bien à celui attendu
         if ($this->isCsrfTokenValid('delete_tache_' . $tache->getId(), $request->request->get('_token'))) {
             // Je garde l’id du projet avant la suppression
