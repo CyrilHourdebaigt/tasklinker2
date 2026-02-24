@@ -30,29 +30,43 @@
 							</a>
 						</li>
 
-						<li>
-							<a href="{{ path('employe_index') }}">
-								<i class="fa-regular fa-user"></i>
-								Équipe
-							</a>
-						</li>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li>
+								<a href="{{ path('employe_index') }}">
+									<i class="fa-regular fa-user"></i>
+									Équipe
+								</a>
+							</li>
+						{% endif %}
 					</ul>
 				</nav>
 
 				<main>
-					{% block body %}{% endblock %}
-				</main>
-			</div>
+					<header class="top-header">
+						<h1 class="page-title"> {% block page_title %}{% endblock %}
+							</h1>
 
-			{# JS #}
-			<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+							{% if app.user %}
+								<a href="{{ path('app_logout') }}" class="user-avatar" title="Se déconnecter">
+									{{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}
+								</a>
+							{% endif %}
+						</header>
 
-			<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-			<script src="{{ asset('js/select.js') }}"></script>
-			{% block javascripts %}
-				{% block importmap %}
-					{{ importmap('app') }}
-				{% endblock %}
-			{% endblock %}
-		</body>
-	</html>
+						<div class="page-content"> {% block body %}{% endblock %}
+							</div>
+						</main>
+					</div>
+
+					{# JS #}
+					<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+					<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+					<script src="{{ asset('js/select.js') }}"></script>
+					{% block javascripts %}
+						{% block importmap %}
+							{{ importmap('app') }}
+						{% endblock %}
+					{% endblock %}
+				</body>
+			</html>

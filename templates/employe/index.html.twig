@@ -2,14 +2,9 @@
 
 {% block title %}Liste des employés - TaskLinker
 {% endblock %}
+{% block page_title %}Équipe{% endblock %}
 
 {% block body %}
-	<header>
-		<div id="current-user"></div>
-		<div id="title-page">
-			<h1>Équipe</h1>
-		</div>
-	</header>
 
 	<div id="content">
 		<table id="team-container">
@@ -17,6 +12,7 @@
 				<tr>
 					<th>Prénom, Nom</th>
 					<th>Statut</th>
+					<th>Rôle</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -41,6 +37,14 @@
 						<td>{{ employe.statut }}</td>
 
 						<td>
+							{% if 'ROLE_ADMIN' in employe.roles %}
+								Chef de projet
+							{% else %}
+								Collaborateur
+							{% endif %}
+						</td>
+
+						<td>
 							<a class="button button-edit-team" href="{{ path('employe_edit', { id: employe.id }) }}">
 								Éditer
 							</a>
@@ -56,7 +60,7 @@
 					</tr>
 				{% else %}
 					<tr>
-						<td colspan="3">Aucun employé.</td>
+						<td colspan="4">Aucun employé.</td>
 					</tr>
 				{% endfor %}
 			</tbody>

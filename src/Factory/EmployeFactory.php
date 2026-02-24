@@ -3,30 +3,24 @@
 namespace App\Factory;
 
 use App\Entity\Employe;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-/**
- * @extends PersistentProxyObjectFactory<Employe>
- */
 final class EmployeFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct() {}
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        parent::__construct();
+        $this->passwordHasher = $passwordHasher;
+    }
 
     public static function class(): string
     {
         return Employe::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function defaults(): array|callable
     {
         return [
@@ -35,16 +29,18 @@ final class EmployeFactory extends PersistentProxyObjectFactory
             'email' => self::faker()->unique()->safeEmail(),
             'dateEntree' => self::faker()->dateTimeBetween('-3 years', 'now'),
             'statut' => self::faker()->randomElement(['CDI', 'CDD', 'Freelance']),
+            'roles' => [],
+            'password' => 'password', // sera hashé après
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Employe $employe): void {})
-        ;
+            ->afterInstantiate(function(Employe $employe): void {
+                $employe->setPassword(
+                    $this->passwordHasher->hashPassword($employe, $employe->getPassword())
+                );
+            });
     }
 }

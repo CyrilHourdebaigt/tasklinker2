@@ -5,25 +5,27 @@
 	- TaskLinker
 {% endblock %}
 
-{% block body %}
-	<header>
-		<div id="current-user"></div>
-		<div id="title-page">
-			<div class="flex-header">
-				<h1>{{ projet.titre }}</h1>
+{% block page_title %}
+	<div class="flex-header">
+		<span>{{ projet.titre }}</span>
 
-				<div class="user-list">
-					{% for employe in projet.employes %}
-						<div class="avatar">
-							{{ employe.prenom|first|upper }}{{ employe.nom|first|upper }}
-						</div>
-					{% endfor %}
+		<div class="user-list">
+			{% for employe in projet.employes %}
+				<div class="avatar">
+					{{ employe.prenom|first|upper }}{{ employe.nom|first|upper }}
 				</div>
-
-				<a class="button" href="{{ path('projet_edit', { id: projet.id }) }}" class="project-action">Modifier</a>
-			</div>
+			{% endfor %}
 		</div>
-	</header>
+
+		{% if is_granted('ROLE_ADMIN') %}
+			<a class="button project-action" href="{{ path('projet_edit', { id: projet.id }) }}">
+				Modifier
+			</a>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block body %}
 
 	<div id="content">
 		<div

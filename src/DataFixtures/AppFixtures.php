@@ -15,10 +15,20 @@ final class AppFixtures extends Fixture
         // 1) Employés
         EmployeFactory::createMany(10);
 
-        // 2) Projets
+        // 2) ADMIN
+        EmployeFactory::createOne([
+            'prenom' => 'Elise',
+            'nom' => 'Hor',
+            'email' => 'elise@example.fr',
+            'statut' => 'CDI',
+            'roles' => ['ROLE_ADMIN'],
+            'password' => 'elise',
+        ]);
+
+        // 3) Projets
         $projets = ProjetFactory::createMany(5);
 
-        // 3) Tâches : 10 tâches par projet, avec statuts variés
+        // 4) Tâches : 10 tâches par projet, avec statuts variés
         foreach ($projets as $projet) {
             TacheFactory::createMany(4, [
                 'projet' => $projet,

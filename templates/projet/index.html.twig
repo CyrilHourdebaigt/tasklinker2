@@ -1,30 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	{{ projet.titre }}
-	- TaskLinker
+{% block title %}Projets - TaskLinker
+{% endblock %}
+{% block page_title %}Projets
 {% endblock %}
 
 {% block body %}
-	<header>
-		<div id="title-page">
-			<h1>{{ projet.titre }}</h1>
-		</div>
-	</header>
 
 	<div id="content">
-		<h2>Tâches</h2>
+		<div
+			class="projets-grid">
+			{# Carte "Ajouter un projet" (visible admin seulement) #}
+			{% if is_granted('ROLE_ADMIN') %}
+				<a class="projet-card add-projet" href="{{ path('projet_new') }}">
+					+ Ajouter un projet
+				</a>
+			{% endif %}
 
-		<ul>
-			{% for tache in taches %}
-				<li>
-					{{ tache.titre }}
-					—
-					<strong>{{ tache.statut }}</strong>
-				</li>
+			{# Liste des projets #}
+			{% for projet in projets %}
+				<a class="projet-card" href="{{ path('projet_show', {id: projet.id}) }}">
+					<h3>{{ projet.titre }}</h3>
+				</a>
 			{% else %}
-				<li>Aucune tâche pour le moment.</li>
+				<p>Aucun projet pour le moment.</p>
 			{% endfor %}
-		</ul>
+		</div>
 	</div>
 {% endblock %}

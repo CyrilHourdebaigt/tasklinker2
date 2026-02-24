@@ -16,6 +16,24 @@ class ProjetRepository extends ServiceEntityRepository
         parent::__construct($registry, Projet::class);
     }
 
+    public function findAccessibleProjects($user): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.archive = false')
+            ->orderBy('p.id', 'DESC');
+
+        // Si pas admin on ne garde que les projets où l'utilisateur est assigné
+        if (!in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            $qb
+                ->innerJoin('p.employes', 'e')
+                ->andWhere('e = :user')
+                ->setParameter('user', $user);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
     //    /**
     //     * @return Projet[] Returns an array of Projet objects
     //     */

@@ -33,10 +33,25 @@ final class EmployeController extends AbstractController
     {
         // Je crée le formulaire lié à l’employé sélectionné
         $form = $this->createForm(EmployeType::class, $employe);
+
+        // Je set le rôle de l'utilisateur
+        $form->get('role')->setData(
+            in_array('ROLE_ADMIN', $employe->getRoles(), true) ? 'ROLE_ADMIN' : 'ROLE_USER'
+        );
+
         $form->handleRequest($request);
 
         // Si le formulaire est envoyé et que les données sont valides
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $selectedRole = $form->get('role')->getData();
+
+            if ($selectedRole === 'ROLE_ADMIN') {
+                $employe->setRoles(['ROLE_ADMIN']);
+            } else {
+                $employe->setRoles(['ROLE_USER']);
+            }
+
             // Je sauvegarde les modifications en BDD
             $em->flush();
 

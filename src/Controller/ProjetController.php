@@ -15,20 +15,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjetController extends AbstractController
 {
-    // J'affiche la liste de tous les projets
-    #[Route('/', name: 'projet_index')]
+    // J'affiche la liste des projets accessibles par l'utilisatuer connecté
+    #[Route('/projets', name: 'projet_index')]
     public function index(ProjetRepository $projetRepository): Response
     {
-         // Je récupère tous les projets enregistrés en BDD
+        $user = $this->getUser();
+
         return $this->render('projet/index.html.twig', [
-            'projets' => $projetRepository->findAll(),
+            'projets' => $projetRepository->findAccessibleProjects($user),
         ]);
     }
 
-     // J’affiche le détail d’un projet 
+    // J’affiche le détail d’un projet 
     #[Route('/projets/{id}', name: 'projet_show', requirements: ['id' => '\d+'])]
     public function show(Projet $projet, TacheRepository $tacheRepository): Response
     {
+        // J'applique le voter
+        $this->denyAccessUnlessGranted('projet.view', $projet);
+
         // Je récupère les tâches du projet selon leur statut
         $tachesToDo = $tacheRepository->findBy(['projet' => $projet, 'statut' => 'To Do']);
         $tachesDoing = $tacheRepository->findBy(['projet' => $projet, 'statut' => 'Doing']);
@@ -44,7 +48,7 @@ final class ProjetController extends AbstractController
     }
 
     // Je modifie un projet existant
-    #[Route('/{id}/edit', name: 'projet_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/projets/{id}/edit', name: 'projet_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Projet $projet, Request $request, EntityManagerInterface $em): Response
     {
@@ -115,6 +119,6 @@ final class ProjetController extends AbstractController
         }
 
         // Je redirige vers la page d’accueil
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('projet_index');
     }
 }
