@@ -49,6 +49,7 @@ final class TacheController extends AbstractController
     #[Route('/taches/{id}/edit', name: 'tache_edit', methods: ['GET', 'POST'])]
     public function edit(Tache $tache, Request $request, EntityManagerInterface $em): Response
     {
+        // J'applique le voter
         $this->denyAccessUnlessGranted('projet.view', $tache->getProjet());
 
         // Je crée le formulaire lié à la tâche existante
